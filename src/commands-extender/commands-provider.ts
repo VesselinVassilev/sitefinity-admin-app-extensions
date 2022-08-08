@@ -44,7 +44,7 @@ export const LIST_SELECTED_ITEMS_COMMAND: CommandModel = {
  */
 export const NOTIFICATION_COMMAND: CommandModel = {
     name: "Notification",
-    title: "Show notification",
+    title: "Personalise Asset",
     category: CUSTOM_CATEGORY_NAME,
     ordinal: CUSTOM_COMMAND_BASE.ordinal + 1
 };
@@ -65,8 +65,8 @@ class DynamicItemIndexCommandProvider implements CommandProvider {
         // the commands to be returned
         const commands: CommandModel[] = [];
 
-        this.addPrintPreviewCommand(data, commands);
-        this.addListSelectedItemsCommand(data, commands);
+       // this.addPrintPreviewCommand(data, commands);
+      //  this.addListSelectedItemsCommand(data, commands);
         this.addNotificationCommand(data, commands);
 
         // return an observable here, because generating the actions might be a time consuming operation
@@ -116,19 +116,23 @@ class DynamicItemIndexCommandProvider implements CommandProvider {
     private addNotificationCommand(data: CommandsData, commands: CommandModel[]) {
         // we wish to inject this command only in the edit item view
         if (data.target === CommandsTarget.Edit) {
-            const notificationCommand = Object.assign({}, NOTIFICATION_COMMAND);
+            
+            if (data.dataItem.metadata.typeFullName == "Telerik.Sitefinity.DynamicTypes.Model.FujitsuModules.MarketingAsset") {
+                
+                const notificationCommand = Object.assign({}, NOTIFICATION_COMMAND);
 
-            // assign an injection token or just the class
-            notificationCommand.token = {
-                type: NotificationCommand,
-
-                // assign custom properties to be passed in the context
-                properties: {
-                    dataItem: data.dataItem
-                }
-            };
-
-            commands.push(notificationCommand);
+                // assign an injection token or just the class
+                notificationCommand.token = {
+                    type: NotificationCommand,
+    
+                    // assign custom properties to be passed in the context
+                    properties: {
+                        dataItem: data.dataItem
+                    }
+                };
+    
+                commands.push(notificationCommand);
+            }            
         }
     }
 }

@@ -1,15 +1,15 @@
-import { Injectable, Inject } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable, of } from "rxjs";
 
-import { Command, ExecutionContext, DataItem, NotificationService, NotificationInfo, NOTIFICATION_LOOK_SUCCESS, NOTIFICATION_SERVICE } from "@progress/sitefinity-adminapp-sdk/app/api/v1";
+import { Command, ExecutionContext, DataItem } from "@progress/sitefinity-adminapp-sdk/app/api/v1";
 
 /**
  * Serves as a command that gets invoked when the notification action button is clicked
  */
 @Injectable()
 export class NotificationCommand implements Command {
-    constructor(protected router: Router, @Inject(NOTIFICATION_SERVICE) private notificationService: NotificationService) { }
+    constructor(protected router: Router) { }
 
     /**
      * This method gets invoked when the notification action button is clicked
@@ -19,16 +19,22 @@ export class NotificationCommand implements Command {
         // get the data item from the context.
         const dataItem: DataItem = context.data.dataItem;
 
+        // navigate to the print-preview route using the query params.
+        // return an observable here, because this might be a time consuming operation
+        const url = `/partner-portal/marketing/personalise-asset/admin?id=` + dataItem.key + "&provider=" + dataItem.provider;
+
+        window.open(url, "_blank");
+        
         // publish a notification
-        const notificationInfo: NotificationInfo = {
-            message: `Notification command executed on item: ${dataItem.title}`,
-            look: NOTIFICATION_LOOK_SUCCESS,
-            duration: 7000,
-            filterParam: "item-edit"
-        };
+        // const notificationInfo: NotificationInfo = {
+        //     message: `Notification command executed on item: ${dataItem.title}`,
+        //     look: NOTIFICATION_LOOK_SUCCESS,
+        //     duration: 7000,
+        //     filterParam: "item-edit"
+        // };
 
-        this.notificationService.publishBasicNotification(notificationInfo);
+       // this.notificationService.publishBasicNotification(notificationInfo);
 
-        return of(true);
+        return of({});
     }
 }
