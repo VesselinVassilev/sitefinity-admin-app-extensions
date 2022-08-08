@@ -18,11 +18,16 @@ export class NotificationCommand implements Command {
     execute(context: ExecutionContext): Observable<any> {
         // get the data item from the context.
         const dataItem: DataItem = context.data.dataItem;
+        var url = "";
+        
+        if (dataItem.metadata.typeFullName == "Telerik.Sitefinity.DynamicTypes.Model.FujitsuModules.MarketingAsset") {
+            url = `/partner-portal/marketing/personalise-asset/admin?id=` + dataItem.key + "&provider=" + dataItem.provider;
+        }
+        else if (dataItem.metadata.typeFullName == "Telerik.Sitefinity.DynamicTypes.Model.FujitsuModules.PartnerNews") {
+            url = `/partner-portal/news/notify?id=` + dataItem.key + "&provider=" + dataItem.provider;
+        }
 
-        // navigate to the print-preview route using the query params.
-        // return an observable here, because this might be a time consuming operation
-        const url = `/partner-portal/marketing/personalise-asset/admin?id=` + dataItem.key + "&provider=" + dataItem.provider;
-
+       
         window.open(url, "_blank");
         
         // publish a notification

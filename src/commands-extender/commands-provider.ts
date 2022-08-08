@@ -49,6 +49,13 @@ export const NOTIFICATION_COMMAND: CommandModel = {
     ordinal: CUSTOM_COMMAND_BASE.ordinal + 1
 };
 
+export const NOTIFICATION_COMMAND_NEWS: CommandModel = {
+    name: "Notification",
+    title: "Notify Partners",
+    category: CUSTOM_CATEGORY_NAME,
+    ordinal: CUSTOM_COMMAND_BASE.ordinal + 1
+};
+
 /**
  * The command provider provides the necessary commands back to the AdminApp.
  */
@@ -133,6 +140,23 @@ class DynamicItemIndexCommandProvider implements CommandProvider {
     
                 commands.push(notificationCommand);
             }            
+
+            if (data.dataItem.metadata.typeFullName == "Telerik.Sitefinity.DynamicTypes.Model.FujitsuModules.PartnerNews") {
+                
+                const notificationCommand = Object.assign({}, NOTIFICATION_COMMAND_NEWS);
+
+                // assign an injection token or just the class
+                notificationCommand.token = {
+                    type: NotificationCommand,
+    
+                    // assign custom properties to be passed in the context
+                    properties: {
+                        dataItem: data.dataItem
+                    }
+                };
+    
+                commands.push(notificationCommand);
+            }       
         }
     }
 }
